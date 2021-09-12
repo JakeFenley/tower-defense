@@ -1,14 +1,15 @@
-import { ROAD_PATH_COORDS, TILE_SQ } from '../map/map-settings';
 import enemy, { Enemy } from './enemy';
 
+import { TILE_SQ } from '../map/map-settings';
+
 const ENEMY_COUNT = 20;
-const TIME_BEFORE_INITIAL_MOVE = 200;
+const TIME_BETWEEN_SPAWN = 200;
+const ROUND_START_TIME = 10000;
 
 interface Enemies {
   spawn: (level: number) => void;
   reset: () => void;
-  move: () => void;
-  draw: () => void;
+  animateFrame: () => void;
 }
 
 function enemies(ctx: CanvasRenderingContext2D): Enemies {
@@ -21,23 +22,21 @@ function enemies(ctx: CanvasRenderingContext2D): Enemies {
   };
 
   const spawn = (level: number) => {
-    for(let i = 0; i < ENEMY_COUNT; i++) {
-      _enemies.push(enemy(level))
+    for (let i = 0; i < ENEMY_COUNT; i++) {
+      _enemies.push(enemy(level));
     }
   };
 
-  const move = () => {
-    const enemiesToMove = Math.floor((Date.now() - _startTime) / TIME_BEFORE_INITIAL_MOVE);
+  const animateFrame = () => {
+    const elapsedTime = Math.floor(Date.now() - _startTime);
+    if (elapsedTime < ROUND_START_TIME) {
+      return;
+    }
+    const enemiesToMove = elapsedTime / TIME_BETWEEN_SPAWN;
     for (let i = 0; i < enemiesToMove && i < _enemies.length; i++) {
       const enemy = _enemies[i];
       enemy.move();
-    }
-  };
 
-  const draw = () => {
-    const enemiesToMove = Math.floor((Date.now() - _startTime) / TIME_BEFORE_INITIAL_MOVE);
-    for (let i = 0; i < enemiesToMove && i < _enemies.length; i++) {
-      const enemy = _enemies[i];
       if (enemy.imageLoaded()) {
         const { x, y } = enemy.getCoords();
         ctx.drawImage(enemy.getImage(), x, y, TILE_SQ, TILE_SQ);
@@ -48,8 +47,7 @@ function enemies(ctx: CanvasRenderingContext2D): Enemies {
   return {
     spawn: spawn,
     reset: reset,
-    move: move,
-    draw: draw,
+    animateFrame: animateFrame,
   };
 }
 

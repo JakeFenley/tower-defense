@@ -14,8 +14,7 @@ function main(canvas: HTMLCanvasElement) {
   const game = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     map.draw();
-    enemies.move();
-    enemies.draw();
+    enemies.animateFrame();
     requestAnimationFrame(game);
   };
   enemies.reset();
