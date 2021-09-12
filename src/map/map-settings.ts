@@ -3,7 +3,7 @@ export const TILE_SQ = 40;
 export const TREE_COORDS = [
   { x: 7, y: 18 },
   { x: 3, y: 22 },
-  { x: 20, y: 3 },
+  { x: 22, y: 3 },
 ];
 
 export const ROAD_PATH_COORDS = [
