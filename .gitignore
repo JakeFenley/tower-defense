@@ -3,7 +3,6 @@
 # compiled output
 /tmp
 /out-tsc
-/node_modules
 
 # Runtime data
 pids
@@ -22,6 +21,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # Dependency directories
+node_modules/
 
 # dotenv environment variables file
 .env
