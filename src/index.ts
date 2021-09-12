@@ -19,7 +19,7 @@ function main(canvas: HTMLCanvasElement) {
     requestAnimationFrame(game);
   };
   enemies.reset();
-  enemies.spawn(1)
+  enemies.spawn(3)
   requestAnimationFrame(game);
 }
 

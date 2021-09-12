@@ -1,8 +1,8 @@
 import { ROAD_PATH_COORDS, TILE_SQ } from '../map/map-settings';
 import enemy, { Enemy } from './enemy';
 
-const ENEMY_COUNT = 30;
-const TIME_BEFORE_INITIAL_MOVE = 500;
+const ENEMY_COUNT = 20;
+const TIME_BEFORE_INITIAL_MOVE = 200;
 
 interface Enemies {
   spawn: (level: number) => void;
