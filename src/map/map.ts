@@ -51,11 +51,11 @@ function initMap(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
   const _trees: grid[] = buildTrees();
 
   const _map: grid[] = [..._base, ..._road, ..._trees];
-  const _images: { [key: string]: { img: HTMLImageElement; loaded: boolean; x: number; y: number } } = {};
+  const _imgs: { [key: string]: { img: HTMLImageElement; loaded: boolean; x: number; y: number } } = {};
 
   const draw = () => {
-    Object.keys(_images).forEach((key) => {
-      const img = _images[key];
+    Object.keys(_imgs).forEach((key) => {
+      const img = _imgs[key];
       if (img.loaded) {
         ctx.drawImage(img.img, img.x * TILE_SQ, img.y * TILE_SQ, TILE_SQ, TILE_SQ);
       }
@@ -67,13 +67,13 @@ function initMap(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
     return 'x_' + x + '_y_' + y + '_img_' + imgPathSplit[imgPathSplit.length - 1];
   };
 
-  const _makeImages = () => {
+  const _makeImgs = () => {
     _map.forEach((tile) => {
       const hash = _makeHash(tile.x, tile.y, tile.imgSrc);
       const img = makeImg(tile.imgSrc, () => {
-        _images[hash].loaded = true
+        _imgs[hash].loaded = true
       })
-      _images[hash] = {
+      _imgs[hash] = {
         img: img,
         loaded: false,
         x: tile.x,
@@ -82,7 +82,7 @@ function initMap(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
     });
   };
 
-  _makeImages();
+  _makeImgs();
 
   return { draw: draw };
 }
