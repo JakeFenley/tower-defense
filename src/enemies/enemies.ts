@@ -13,7 +13,7 @@ interface Enemies {
 }
 
 function enemies(): Enemies {
-  const ctx = store.getCtx()
+  const ctx = store.getCtx() as CanvasRenderingContext2D
   let _enemies: Enemy[];
   let _startTime: number;
 

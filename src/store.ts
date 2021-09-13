@@ -1,25 +1,22 @@
-declare global {
-  interface Window {
-      __tower_defense__:any;
-  }
-}
-
 const store = () => {
-  
+  let _canvas: HTMLCanvasElement;
+  let _ctx: CanvasRenderingContext2D | null;
+
   const setCanvas = (canvas: HTMLCanvasElement) => {
-    window.__tower_defense__ = {}
-    window.__tower_defense__.canvas = canvas
-    window.__tower_defense__.ctx = canvas.getContext('2d');
+    _canvas = canvas;
+    _ctx = canvas.getContext('2d');
   };
 
-  const getCanvas = () => window.__tower_defense__.canvas;
-  const getCtx = () => window.__tower_defense__.ctx;
+  const getCanvas = () => _canvas;
+  const getCtx = () => _ctx;
 
   return {
     setCanvas,
     getCanvas,
     getCtx,
-  }
-}
+  };
+};
 
-export default store()
+const storeInstance = store();
+
+export default storeInstance;

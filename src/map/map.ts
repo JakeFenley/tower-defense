@@ -46,8 +46,8 @@ function buildTrees() {
 }
 
 function map() {
-  const canvas = store.getCanvas()
-  const ctx = store.getCtx()
+  const canvas = store.getCanvas();
+  const ctx = store.getCtx() as CanvasRenderingContext2D;
   const { width, height } = canvas;
   const _base: grid[] = buildGrass(width, height);
   const _road: grid[] = buildRoad();
@@ -74,8 +74,8 @@ function map() {
     _map.forEach((tile) => {
       const hash = _makeHash(tile.x, tile.y, tile.imgSrc);
       const img = makeImg(tile.imgSrc, () => {
-        _imgs[hash].loaded = true
-      })
+        _imgs[hash].loaded = true;
+      });
       _imgs[hash] = {
         img: img,
         loaded: false,

@@ -111,11 +111,6 @@ export default function enemy(level: number): Enemy {
   };
 
   const move = () => {
-    // Maybe this is controlled at a higher level?
-    if (_health <= 0) {
-      return;
-    }
-
     if (!_moved) {
       _setInitialMovement();
     }

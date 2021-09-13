@@ -8,7 +8,7 @@ interface Towers {
 }
 
 function towers(): Towers {
-  const ctx = store.getCtx();
+  const ctx = store.getCtx() as CanvasRenderingContext2D;
   let _towers: Tower[] = [];
 
   const buildTower = (id: number) => {
