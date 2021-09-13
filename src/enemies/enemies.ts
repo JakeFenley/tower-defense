@@ -33,9 +33,9 @@ function enemies(ctx: CanvasRenderingContext2D): Enemies {
       const enemy = _enemies[i];
       enemy.move();
 
-      if (enemy.imageLoaded()) {
+      if (enemy.imgLoaded()) {
         const { x, y } = enemy.getCoords();
-        ctx.drawImage(enemy.getImage(), x, y, TILE_SQ, TILE_SQ);
+        ctx.drawImage(enemy.getImg(), x, y, TILE_SQ, TILE_SQ);
       }
     }
   };

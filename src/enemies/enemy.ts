@@ -1,5 +1,6 @@
-import { finalRoadTileCoords, ROAD_PATH_COORDS, TILE_SQ } from '../map/map-settings';
+import { ROAD_PATH_COORDS } from '../map/map-settings';
 import { Tile } from '../types';
+import { convertToTrueCoords, makeImg } from '../util';
 
 const GOBLIN = '/assets/goblin_basic.png';
 const BIRD = '/assets/bird.png';
@@ -12,7 +13,7 @@ const UP = 'up';
 export interface EnemyConfigProps {
   health?: number;
   speed?: number;
-  imageSrc?: string;
+  imgSrc?: string;
 }
 
 const ENEMIES: {
@@ -20,32 +21,31 @@ const ENEMIES: {
 } = {
   1: {
     health: 20,
-    speed: .025,
-    imageSrc: GOBLIN,
+    speed: 0.025,
+    imgSrc: GOBLIN,
   },
   2: {
     health: 40,
-    speed: .025,
-    imageSrc: BIRD,
+    speed: 0.025,
+    imgSrc: BIRD,
   },
   3: {
     health: 80,
-    speed: .035,
-    imageSrc: CHARIZARD,
+    speed: 0.035,
+    imgSrc: CHARIZARD,
   },
 };
 
 export interface Enemy {
   move: () => void;
-  getImage: () => HTMLImageElement;
+  getImg: () => HTMLImageElement;
   getCoords: () => { x: number; y: number };
-  imageLoaded: () => boolean;
+  imgLoaded: () => boolean;
 }
 
 export default function enemy(level: number): Enemy {
   let _health = <number>ENEMIES[level].health;
   let _speed = <number>ENEMIES[level].speed;
-  let _imageLoaded = false;
   let _moved = false;
   let _tileIdx = 0;
   let _x: number;
@@ -53,19 +53,10 @@ export default function enemy(level: number): Enemy {
   let _direction: string;
   let _nextTile: Tile;
   let _currTile: Tile;
-
-  const _image = new Image();
-  _image.src = <string>ENEMIES[level].imageSrc;
-  _image.onload = () => {
-    _imageLoaded = true;
-  };
-
-  const _convertToTrueCoords = (tile: Tile) => {
-    return {
-      x: tile.x * TILE_SQ,
-      y: tile.y * TILE_SQ
-    }
-  } 
+  let _imgLoaded = false;
+  const _img = makeImg(<string>ENEMIES[level].imgSrc, () => {
+    _imgLoaded = true;
+  });
 
   const _setDirection = () => {
     const nextX = _nextTile.x;
@@ -91,8 +82,8 @@ export default function enemy(level: number): Enemy {
   };
 
   const _setInitialMovement = () => {
-    _currTile = _convertToTrueCoords(ROAD_PATH_COORDS[0]);
-    _nextTile = _convertToTrueCoords(ROAD_PATH_COORDS[1]);
+    _currTile = convertToTrueCoords(ROAD_PATH_COORDS[0]);
+    _nextTile = convertToTrueCoords(ROAD_PATH_COORDS[1]);
     _x = _currTile.x;
     _y = _currTile.y;
     _tileIdx = 0;
@@ -103,12 +94,12 @@ export default function enemy(level: number): Enemy {
   const _setNextTileSet = () => {
     if (_tileIdx < ROAD_PATH_COORDS.length - 2) {
       _tileIdx = _tileIdx + 1;
-      _currTile = _convertToTrueCoords(ROAD_PATH_COORDS[_tileIdx]);
-      _nextTile = _convertToTrueCoords(ROAD_PATH_COORDS[_tileIdx + 1]);
+      _currTile = convertToTrueCoords(ROAD_PATH_COORDS[_tileIdx]);
+      _nextTile = convertToTrueCoords(ROAD_PATH_COORDS[_tileIdx + 1]);
       _setDirection();
     } else {
       // possible call game scoring system here.
-      _moved = false
+      _moved = false;
     }
   };
 
@@ -121,7 +112,7 @@ export default function enemy(level: number): Enemy {
 
   const move = () => {
     // Maybe this is controlled at a higher level?
-    if(_health <= 0) {
+    if (_health <= 0) {
       return;
     }
 
@@ -150,8 +141,8 @@ export default function enemy(level: number): Enemy {
 
   return {
     move: move,
-    getImage: () => _image,
+    getImg: () => _img,
     getCoords: () => ({ x: _x, y: _y }),
-    imageLoaded: () => _imageLoaded,
+    imgLoaded: () => _imgLoaded,
   };
 }

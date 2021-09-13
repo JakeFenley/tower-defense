@@ -1,9 +1,11 @@
 import { ROAD_PATH_COORDS, TILE_SQ, TREE_COORDS } from './map-settings';
 
+import { makeImg } from '../util';
+
 type grid = {
   x: number;
   y: number;
-  imageSrc: string;
+  imgSrc: string;
 };
 
 function buildGrass(width: number, height: number) {
@@ -14,7 +16,7 @@ function buildGrass(width: number, height: number) {
       grass.push({
         x: x,
         y: y,
-        imageSrc: '/assets/grass_tile.png',
+        imgSrc: '/assets/grass_tile.png',
       });
     }
   }
@@ -26,7 +28,7 @@ function buildRoad() {
   const road: grid[] = ROAD_PATH_COORDS.map((tile) => {
     return {
       ...tile,
-      imageSrc: '/assets/desert_tile.png',
+      imgSrc: '/assets/desert_tile.png',
     };
   });
   return road;
@@ -36,7 +38,7 @@ function buildTrees() {
   const road: grid[] = TREE_COORDS.map((tile) => {
     return {
       ...tile,
-      imageSrc: '/assets/chestnut_tree.png',
+      imgSrc: '/assets/chestnut_tree.png',
     };
   });
   return road;
@@ -49,13 +51,13 @@ function initMap(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
   const _trees: grid[] = buildTrees();
 
   const _map: grid[] = [..._base, ..._road, ..._trees];
-  const _images: { [key: string]: { image: HTMLImageElement; loaded: boolean; x: number; y: number } } = {};
+  const _images: { [key: string]: { img: HTMLImageElement; loaded: boolean; x: number; y: number } } = {};
 
   const draw = () => {
     Object.keys(_images).forEach((key) => {
-      const image = _images[key];
-      if (image.loaded) {
-        ctx.drawImage(image.image, image.x * TILE_SQ, image.y * TILE_SQ, TILE_SQ, TILE_SQ);
+      const img = _images[key];
+      if (img.loaded) {
+        ctx.drawImage(img.img, img.x * TILE_SQ, img.y * TILE_SQ, TILE_SQ, TILE_SQ);
       }
     });
   };
@@ -67,17 +69,15 @@ function initMap(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
 
   const _makeImages = () => {
     _map.forEach((tile) => {
-      const img = new Image();
-      img.src = tile.imageSrc;
-      const hash = _makeHash(tile.x, tile.y, img.src);
+      const hash = _makeHash(tile.x, tile.y, tile.imgSrc);
+      const img = makeImg(tile.imgSrc, () => {
+        _images[hash].loaded = true
+      })
       _images[hash] = {
-        image: img,
+        img: img,
         loaded: false,
         x: tile.x,
         y: tile.y,
-      };
-      img.onload = () => {
-        _images[hash].loaded = true;
       };
     });
   };

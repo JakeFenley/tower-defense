@@ -1,15 +1,15 @@
 export interface EnemyConfigProps {
     health?: number;
     speed?: number;
-    imageSrc?: string;
+    imgSrc?: string;
 }
 export interface Enemy {
     move: () => void;
-    getImage: () => HTMLImageElement;
+    getImg: () => HTMLImageElement;
     getCoords: () => {
         x: number;
         y: number;
     };
-    imageLoaded: () => boolean;
+    imgLoaded: () => boolean;
 }
 export default function enemy(level: number): Enemy;
