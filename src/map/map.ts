@@ -1,6 +1,7 @@
 import { ROAD_PATH_COORDS, TILE_SQ, TREE_COORDS } from './map-settings';
 
 import { makeImg } from '../util';
+import store from '../store';
 
 type grid = {
   x: number;
@@ -44,7 +45,9 @@ function buildTrees() {
   return road;
 }
 
-function initMap(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
+function map() {
+  const canvas = store.getCanvas()
+  const ctx = store.getCtx()
   const { width, height } = canvas;
   const _base: grid[] = buildGrass(width, height);
   const _road: grid[] = buildRoad();
@@ -87,4 +90,4 @@ function initMap(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
   return { draw: draw };
 }
 
-export default initMap;
+export default map;

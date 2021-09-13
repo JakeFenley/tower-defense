@@ -24,24 +24,24 @@ const TOWERS: {
 
 export interface Tower {
   getImg: () => HTMLImageElement;
-  getCoords: () => { x: number; y: number };
+  getCoords: () => Tile;
   imgLoaded: () => boolean;
 }
 
-export default function tower(id: number): Tower {
+export default function tower(id: number, x: number, y: number): Tower {
   let _damage = <number>TOWERS[id].damage;
   let _speed = <number>TOWERS[id].speed;
   let _imgLoaded = false;
-  let _x: number;
-  let _y: number;
+  let _x = x;
+  let _y = y;
 
   const _img = makeImg(<string>TOWERS[id].imgSrc, () => {
     _imgLoaded = true;
   });
 
   return {
-    getImg: () => _img,
-    getCoords: () => ({ x: _x, y: _y }),
+    getImg: () => _img as HTMLImageElement,
+    getCoords: () => <Tile>{ x: _x, y: _y },
     imgLoaded: () => _imgLoaded,
   };
 }

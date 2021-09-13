@@ -1,6 +1,7 @@
 import enemy, { Enemy } from './enemy';
 
 import { TILE_SQ } from '../map/map-settings';
+import store from '../store';
 
 const ENEMY_COUNT = 20;
 const TIME_BETWEEN_SPAWN = 200;
@@ -11,7 +12,8 @@ interface Enemies {
   animateFrame: () => void;
 }
 
-function enemies(ctx: CanvasRenderingContext2D): Enemies {
+function enemies(): Enemies {
+  const ctx = store.getCtx()
   let _enemies: Enemy[];
   let _startTime: number;
 
