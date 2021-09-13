@@ -23,9 +23,9 @@ const TOWERS: {
 };
 
 export interface Tower {
-  getImage: () => HTMLImageElement;
+  getImg: () => HTMLImageElement;
   getCoords: () => { x: number; y: number };
-  imageLoaded: () => boolean;
+  imgLoaded: () => boolean;
 }
 
 export default function tower(id: number): Tower {
@@ -35,13 +35,13 @@ export default function tower(id: number): Tower {
   let _x: number;
   let _y: number;
 
-  const _image = makeImg(<string>TOWERS[id].imgSrc, () => {
+  const _img = makeImg(<string>TOWERS[id].imgSrc, () => {
     _imgLoaded = true;
   });
 
   return {
-    getImage: () => _image,
+    getImg: () => _img,
     getCoords: () => ({ x: _x, y: _y }),
-    imageLoaded: () => _imgLoaded,
+    imgLoaded: () => _imgLoaded,
   };
 }
