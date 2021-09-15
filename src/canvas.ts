@@ -21,6 +21,6 @@ const canvasStore = () => {
   };
 };
 
-const storeInstance = canvasStore();
+const store = canvasStore();
 
-export default storeInstance;
+export default store;

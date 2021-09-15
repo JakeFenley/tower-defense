@@ -2,6 +2,7 @@ import { Enemy } from '../enemies/enemy';
 import { Tile } from '../types';
 import { makeImg } from '../util';
 import { ARROW } from './projectile';
+import Projectiles from './projectiles';
 
 const CHARIZARD = '/assets/charizard.png';
 
@@ -19,7 +20,7 @@ const TOWERS: {
 } = {
   1: {
     name: 'Charizard',
-    damage: 0.75,
+    damage: 15,
     speed: 1,
     imgSrc: CHARIZARD,
     radius: 200,
@@ -36,11 +37,12 @@ export interface Tower {
 }
 
 export default function tower(id: number, x: number, y: number): Tower {
-  const projectile = <string>TOWERS[id].projectile
+  const projectile = <string>TOWERS[id].projectile;
   let _damage = <number>TOWERS[id].damage;
   let _speed = <number>TOWERS[id].speed;
   let _radius = <number>TOWERS[id].radius;
   let _imgLoaded = false;
+  let _ticks = 0;
   let _x = x;
   let _y = y;
   let _focusedEnemy: Enemy | null = null;
@@ -75,13 +77,30 @@ export default function tower(id: number, x: number, y: number): Tower {
 
     return enemy;
   };
+
+  const _doAttackSideEffects = () => {
+    if (_focusedEnemy) {
+      _focusedEnemy.damage(_damage);
+      Projectiles.createProjectile(tower, _focusedEnemy);
+      if (_focusedEnemy.getHealth() <= 0) {
+        _focusedEnemy = null;
+      }
+    }
+  };
+
   const attack = (enemies: Enemy[]) => {
+    _ticks++;
+
+    if (_ticks! % 30) {
+      return;
+    }
+
     if (_focusedEnemy) {
       const { x: enemyX, y: enemyY } = _focusedEnemy.getCoords();
       const distX = Math.abs(_x - enemyX);
       const distY = Math.abs(_y - enemyY);
       if (distX < _radius && distY < _radius) {
-        return _focusedEnemy.damage(_damage);
+        _doAttackSideEffects();
       } else {
         _focusedEnemy = null;
       }
@@ -90,16 +109,18 @@ export default function tower(id: number, x: number, y: number): Tower {
     if (!_focusedEnemy) {
       _focusedEnemy = _getClosestEnemy(enemies);
       if (_focusedEnemy) {
-        _focusedEnemy.damage(_damage);
+        _doAttackSideEffects();
       }
     }
   };
 
-  return {
+  const tower = {
     getImg: () => _img as HTMLImageElement,
     getCoords: () => <Tile>{ x: _x, y: _y },
     imgLoaded: () => _imgLoaded,
     attack,
     projectile,
   };
+
+  return tower;
 }

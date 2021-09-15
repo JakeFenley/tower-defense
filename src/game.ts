@@ -1,3 +1,4 @@
+import Projectiles from './towers/projectiles';
 import enemies from './enemies/enemies';
 import map from './map/map';
 import store from './canvas';
@@ -10,6 +11,7 @@ function game() {
   const mapController = map();
   const enemyController = enemies();
   const towerController = towers(enemyController);
+  const projectiles = new Projectiles();
   enemyController.reset(1); // todo: implement game system
 
   const render = () => {
@@ -18,6 +20,7 @@ function game() {
       mapController.draw();
       enemyController.animateFrame();
       towerController.animateFrame();
+      projectiles.animateFrame();
       requestAnimationFrame(render);
     }
   };
