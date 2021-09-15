@@ -1,10 +1,14 @@
-const store = () => {
+const canvasStore = () => {
   let _canvas: HTMLCanvasElement;
   let _ctx: CanvasRenderingContext2D | null;
 
   const setCanvas = (canvas: HTMLCanvasElement) => {
-    _canvas = canvas;
-    _ctx = canvas.getContext('2d');
+    if (!_canvas) {
+      _canvas = canvas;
+      _ctx = canvas.getContext('2d');
+    } else {
+      throw 'Canvas element has already been set';
+    }
   };
 
   const getCanvas = () => _canvas;
@@ -17,6 +21,6 @@ const store = () => {
   };
 };
 
-const storeInstance = store();
+const storeInstance = canvasStore();
 
 export default storeInstance;

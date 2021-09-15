@@ -37,9 +37,11 @@ const ENEMIES: {
 };
 
 export interface Enemy {
+  damage: (dmg: number) => void;
   move: () => void;
   getImg: () => HTMLImageElement;
   getCoords: () => { x: number; y: number };
+  getHealth: () => number;
   imgLoaded: () => boolean;
 }
 
@@ -134,10 +136,16 @@ export default function enemy(level: number): Enemy {
     _setCoords();
   };
 
+  const damage = (dmg: number) => {
+    _health = _health - dmg;
+  }
+
   return {
-    move: move,
+    damage,
+    move,
     getImg: () => _img,
     getCoords: () => ({ x: _x, y: _y }),
+    getHealth: () => _health,
     imgLoaded: () => _imgLoaded,
   };
 }

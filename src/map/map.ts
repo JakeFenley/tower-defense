@@ -1,7 +1,7 @@
 import { ROAD_PATH_COORDS, TILE_SQ, TREE_COORDS } from './map-settings';
 
 import { makeImg } from '../util';
-import store from '../store';
+import store from '../canvas';
 
 type grid = {
   x: number;

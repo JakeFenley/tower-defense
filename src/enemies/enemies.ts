@@ -1,19 +1,21 @@
 import enemy, { Enemy } from './enemy';
 
 import { TILE_SQ } from '../map/map-settings';
-import store from '../store';
+import { Tile } from '../types';
+import store from '../canvas';
 
 const ENEMY_COUNT = 20;
 const TIME_BETWEEN_SPAWN = 200;
-const ROUND_START_TIME = 5000;
+const ROUND_START_TIME = 0;
 
-interface Enemies {
+export interface Enemies {
   reset: (level: number) => void;
   animateFrame: () => void;
+  getEnemies: () => Enemy[];
 }
 
 function enemies(): Enemies {
-  const ctx = store.getCtx() as CanvasRenderingContext2D
+  const ctx = store.getCtx() as CanvasRenderingContext2D;
   let _enemies: Enemy[];
   let _startTime: number;
 
@@ -35,7 +37,7 @@ function enemies(): Enemies {
       const enemy = _enemies[i];
       enemy.move();
 
-      if (enemy.imgLoaded()) {
+      if (enemy.imgLoaded() && enemy.getHealth() > 0) {
         const { x, y } = enemy.getCoords();
         ctx.drawImage(enemy.getImg(), x, y, TILE_SQ, TILE_SQ);
       }
@@ -43,8 +45,9 @@ function enemies(): Enemies {
   };
 
   return {
-    reset: reset,
-    animateFrame: animateFrame,
+    reset,
+    animateFrame,
+    getEnemies: () => _enemies.filter(enemy => enemy.getHealth() > 0),
   };
 }
 

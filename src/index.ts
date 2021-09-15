@@ -1,5 +1,5 @@
 import game from './game';
-import store from './store';
+import store from './canvas';
 
 function main() {
   const canvas = document.querySelector('canvas') as HTMLCanvasElement;
