@@ -1,7 +1,7 @@
 import { ASSETS } from '../types';
-import { Enemy } from '../enemies/enemy';
+import { IEnemy } from '../enemies/enemy';
+import { ITower } from './tower';
 import Projectiles from './projectiles';
-import { Tower } from './tower';
 import { makeImg } from '../util';
 
 export class Projectile {
@@ -9,14 +9,14 @@ export class Projectile {
   currY: number;
   enemyX: number;
   enemyY: number;
-  tower: Tower;
-  enemy: Enemy;
+  tower: ITower;
+  enemy: IEnemy;
   img: HTMLImageElement;
   imgLoaded: boolean;
   incX: number;
   incY: number;
 
-  constructor(tower: Tower, enemy: Enemy) {
+  constructor(tower: ITower, enemy: IEnemy) {
     const { x: currX, y: currY } = tower.getCoords();
     const { x: enemyX, y: enemyY } = enemy.getCoords();
     this.currX = currX;

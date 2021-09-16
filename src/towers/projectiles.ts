@@ -1,7 +1,7 @@
-import { Enemy } from '../enemies/enemy';
+import { IEnemy } from '../enemies/enemy';
+import { ITower } from './tower';
 import { Projectile } from './projectile';
 import { TILE_SQ } from '../map/map-settings';
-import { Tower } from './tower';
 import store from '../canvas';
 
 export default class Projectiles {
@@ -17,7 +17,7 @@ export default class Projectiles {
     Projectiles.projectiles = Projectiles.projectiles.filter((x) => x !== projectile);
   };
   
-  static createProjectile = (tower: Tower, enemy: Enemy) => {
+  static createProjectile = (tower: ITower, enemy: IEnemy) => {
     const projectile = new Projectile(tower, enemy);
     Projectiles.projectiles.push(projectile);
   };

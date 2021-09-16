@@ -1,5 +1,5 @@
+import Enemies from './enemies/enemies';
 import Projectiles from './towers/projectiles';
-import enemies from './enemies/enemies';
 import map from './map/map';
 import store from './canvas';
 import towers from './towers/towers';
@@ -9,8 +9,8 @@ function game() {
   let _ctx: CanvasRenderingContext2D | null = store.getCtx();
   let _running = false;
   const mapController = map();
-  const enemyController = enemies();
-  const towerController = towers(enemyController);
+  const enemyController = new Enemies();
+  const towerController = towers();
   const projectiles = new Projectiles();
   enemyController.reset(1); // todo: implement game system
 

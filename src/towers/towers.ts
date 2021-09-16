@@ -1,6 +1,6 @@
-import tower, { Tower } from './tower';
+import tower, { ITower } from './tower';
 
-import { Enemies } from '../enemies/enemies';
+import Enemies  from '../enemies/enemies';
 import { TILE_SQ } from '../map/map-settings';
 import store from '../canvas';
 
@@ -8,9 +8,9 @@ interface Towers {
   animateFrame: () => void;
 }
 
-function towers(enemyController: Enemies): Towers {
+function towers(): Towers {
   const ctx = store.getCtx() as CanvasRenderingContext2D;
-  let _towers: Tower[] = [];
+  let _towers: ITower[] = [];
 
   const buildTower = (id: number) => {
     _towers.push(tower(id, 17 * TILE_SQ, 8 * TILE_SQ));
@@ -20,7 +20,7 @@ function towers(enemyController: Enemies): Towers {
   };
 
   const animateFrame = () => {
-    const enemies = enemyController.getEnemies()
+    const enemies = Enemies.getEnemies()
     _towers.forEach((tower) => {
       tower.attack(enemies)
       if (tower.imgLoaded()) {

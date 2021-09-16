@@ -1,18 +1,18 @@
-import { Enemy } from '../enemies/enemy';
+import { IEnemy } from '../enemies/enemy';
 import { Tile, TOWERS } from '../types';
 import { makeImg } from '../util';
 import Projectiles from './projectiles';
 
-export interface Tower {
+export interface ITower {
   getImg: () => HTMLImageElement;
   getCoords: () => Tile;
   imgLoaded: () => boolean;
-  attack: (enemies: Enemy[]) => void;
+  attack: (enemies: IEnemy[]) => void;
   projectile: string;
   damage: number;
 }
 
-export default function tower(id: number, x: number, y: number): Tower {
+export default function tower(id: number, x: number, y: number): ITower {
   const projectile = <string>TOWERS[id].projectile;
   const damage = <number>TOWERS[id].damage;
   const _speed = <number>TOWERS[id].speed;
@@ -21,13 +21,13 @@ export default function tower(id: number, x: number, y: number): Tower {
   const _y = y;
   let _imgLoaded = false;
   let _ticks = 0;
-  let _focusedEnemy: Enemy | null = null;
+  let _focusedEnemy: IEnemy | null = null;
 
   const _img = makeImg(<string>TOWERS[id].imgSrc, () => {
     _imgLoaded = true;
   });
 
-  const _getClosestEnemy = (enemies: Enemy[]) => {
+  const _getClosestEnemy = (enemies: IEnemy[]) => {
     let prevDistance = 1000000;
     const enemy = enemies.reduce((prev, curr) => {
       let isWithinDistance = false;
@@ -63,7 +63,7 @@ export default function tower(id: number, x: number, y: number): Tower {
     }
   };
 
-  const attack = (enemies: Enemy[]) => {
+  const attack = (enemies: IEnemy[]) => {
     _ticks++;
 
     if (_ticks! % 15) {

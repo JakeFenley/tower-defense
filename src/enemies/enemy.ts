@@ -1,7 +1,7 @@
 import { ROAD_PATH_COORDS } from '../map/map-settings';
 import { ASSETS, DIRECTIONS, ENEMIES, Tile } from '../types';
 import { convertToTrueCoords, makeImg } from '../util';
-export interface Enemy {
+export interface IEnemy {
   damage: (dmg: number) => void;
   move: () => void;
   getImg: () => HTMLImageElement;
@@ -11,7 +11,7 @@ export interface Enemy {
   getHealthPercentage: () => number;
 }
 
-export default function enemy(level: number): Enemy {
+export default function enemy(level: number): IEnemy {
   const maxHealth = <number>ENEMIES[level].health;
   let _health = maxHealth;
   let _speed = <number>ENEMIES[level].speed;
