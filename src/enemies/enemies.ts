@@ -5,7 +5,7 @@ import { Tile } from '../types';
 import store from '../canvas';
 
 const ENEMY_COUNT = 70;
-const TIME_BETWEEN_SPAWN = 200;
+const TIME_BETWEEN_SPAWN = 500;
 const ROUND_START_TIME = 0;
 
 export interface Enemies {
@@ -27,6 +27,18 @@ function enemies(): Enemies {
     _startTime = Date.now();
   };
 
+  const _drawHealthBar = (enemy:Enemy, x: number, y: number) => {
+    const healthPercentange = enemy.getHealthPercentage();
+    if (healthPercentange > .85) {
+      ctx.fillStyle = 'green';
+    } else if (healthPercentange > .5) {
+      ctx.fillStyle = 'orange';
+    } else {
+      ctx.fillStyle = 'red';
+    }
+    ctx.fillRect(x + 3, y - 8, TILE_SQ * healthPercentange - 6, 6);
+  };
+
   const animateFrame = () => {
     const elapsedTime = Math.floor(Date.now() - _startTime);
     if (elapsedTime < ROUND_START_TIME) {
@@ -36,10 +48,10 @@ function enemies(): Enemies {
     for (let i = 0; i < enemiesToMove && i < _enemies.length; i++) {
       const enemy = _enemies[i];
       enemy.move();
-
       if (enemy.imgLoaded() && enemy.getHealth() > 0) {
         const { x, y } = enemy.getCoords();
         ctx.drawImage(enemy.getImg(), x, y, TILE_SQ, TILE_SQ);
+        _drawHealthBar(enemy, x,y);
       }
     }
   };
@@ -47,7 +59,7 @@ function enemies(): Enemies {
   return {
     reset,
     animateFrame,
-    getEnemies: () => _enemies.filter(enemy => enemy.getHealth() > 0),
+    getEnemies: () => _enemies.filter((enemy) => enemy.getHealth() > 0),
   };
 }
 

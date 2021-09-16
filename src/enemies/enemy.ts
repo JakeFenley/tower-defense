@@ -1,41 +1,6 @@
 import { ROAD_PATH_COORDS } from '../map/map-settings';
-import { Tile } from '../types';
+import { ASSETS, DIRECTIONS, ENEMIES, Tile } from '../types';
 import { convertToTrueCoords, makeImg } from '../util';
-
-const GOBLIN = '/assets/goblin_basic.png';
-const BIRD = '/assets/bird.png';
-const CHARIZARD = '/assets/charizard.png';
-const RIGHT = 'right';
-const LEFT = 'left';
-const DOWN = 'down';
-const UP = 'up';
-
-export interface EnemyConfigProps {
-  health?: number;
-  speed?: number;
-  imgSrc?: string;
-}
-
-const ENEMIES: {
-  [key: number]: EnemyConfigProps;
-} = {
-  1: {
-    health: 20,
-    speed: 0.025,
-    imgSrc: GOBLIN,
-  },
-  2: {
-    health: 40,
-    speed: 0.025,
-    imgSrc: BIRD,
-  },
-  3: {
-    health: 80,
-    speed: 0.035,
-    imgSrc: CHARIZARD,
-  },
-};
-
 export interface Enemy {
   damage: (dmg: number) => void;
   move: () => void;
@@ -43,10 +8,12 @@ export interface Enemy {
   getCoords: () => { x: number; y: number };
   getHealth: () => number;
   imgLoaded: () => boolean;
+  getHealthPercentage: () => number;
 }
 
 export default function enemy(level: number): Enemy {
-  let _health = <number>ENEMIES[level].health;
+  const maxHealth = <number>ENEMIES[level].health;
+  let _health = maxHealth;
   let _speed = <number>ENEMIES[level].speed;
   let _moved = false;
   let _tileIdx = 0;
@@ -67,10 +34,10 @@ export default function enemy(level: number): Enemy {
     let max = { val: -1000, key: '' };
 
     const differences: { [key: string]: number } = {
-      [UP]: _y - nextY,
-      [DOWN]: nextY - _y,
-      [LEFT]: _x - nextX,
-      [RIGHT]: nextX - _x,
+      [DIRECTIONS.UP]: _y - nextY,
+      [DIRECTIONS.DOWN]: nextY - _y,
+      [DIRECTIONS.LEFT]: _x - nextX,
+      [DIRECTIONS.RIGHT]: nextX - _x,
     };
 
     Object.keys(differences).forEach((key) => {
@@ -117,19 +84,12 @@ export default function enemy(level: number): Enemy {
       _setInitialMovement();
     }
 
-    if (_direction === LEFT && _x <= _nextTile.x) {
-      _setNextTileSet();
-    }
-
-    if (_direction === RIGHT && _x >= _nextTile.x) {
-      _setNextTileSet();
-    }
-
-    if (_direction === DOWN && _y >= _nextTile.y) {
-      _setNextTileSet();
-    }
-
-    if (_direction === UP && _y <= _nextTile.y) {
+    if (
+      (_direction === DIRECTIONS.LEFT && _x <= _nextTile.x) ||
+      (_direction === DIRECTIONS.RIGHT && _x >= _nextTile.x) ||
+      (_direction === DIRECTIONS.DOWN && _y >= _nextTile.y) ||
+      (_direction === DIRECTIONS.UP && _y <= _nextTile.y)
+    ) {
       _setNextTileSet();
     }
 
@@ -138,7 +98,7 @@ export default function enemy(level: number): Enemy {
 
   const damage = (dmg: number) => {
     _health = _health - dmg;
-  }
+  };
 
   return {
     damage,
@@ -147,5 +107,6 @@ export default function enemy(level: number): Enemy {
     getCoords: () => ({ x: _x, y: _y }),
     getHealth: () => _health,
     imgLoaded: () => _imgLoaded,
+    getHealthPercentage: () => _health / maxHealth,
   };
 }

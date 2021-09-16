@@ -1,13 +1,8 @@
+import { ASSETS } from '../types';
 import { Enemy } from '../enemies/enemy';
 import Projectiles from './projectiles';
 import { Tower } from './tower';
 import { makeImg } from '../util';
-
-export const ARROW = 'arrow';
-
-const IMAGES: { [key: string]: string } = {
-  [ARROW]: '/assets/arrow.png',
-};
 
 export class Projectile {
   currX: number;
@@ -29,7 +24,7 @@ export class Projectile {
     this.enemyX = enemyX;
     this.enemyY = enemyY;
     this.imgLoaded = false;
-    this.img = makeImg(IMAGES[tower.projectile], () => (this.imgLoaded = true));
+    this.img = makeImg(ASSETS[tower.projectile], () => (this.imgLoaded = true));
     this.enemy = enemy;
     this.tower = tower;
     this.incX = (enemyX - currX) / 30;
@@ -41,7 +36,7 @@ export class Projectile {
     this.currX = this.currX + incX;
     this.currY = this.currY + incY;
 
-    if (Math.abs(enemyX - this.currX) < 15 && Math.abs(enemyY - this.currY) < 15) {
+    if (Math.abs(enemyX - this.currX) < 10 && Math.abs(enemyY - this.currY) < 10) {
       this.enemy.damage(this.tower.damage)
       Projectiles.removeProjectile(this);
     }

@@ -1,32 +1,7 @@
 import { Enemy } from '../enemies/enemy';
-import { Tile } from '../types';
+import { Tile, TOWERS } from '../types';
 import { makeImg } from '../util';
-import { ARROW } from './projectile';
 import Projectiles from './projectiles';
-
-const CHARIZARD = '/assets/charizard.png';
-
-export interface TowerConfigProps {
-  name?: string;
-  damage?: number;
-  speed?: number;
-  imgSrc?: string;
-  radius?: number;
-  projectile?: string;
-}
-
-const TOWERS: {
-  [key: number]: TowerConfigProps;
-} = {
-  1: {
-    name: 'Charizard',
-    damage: 1,
-    speed: 1,
-    imgSrc: CHARIZARD,
-    radius: 200,
-    projectile: ARROW,
-  },
-};
 
 export interface Tower {
   getImg: () => HTMLImageElement;
