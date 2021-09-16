@@ -14,6 +14,9 @@ function towers(enemyController: Enemies): Towers {
 
   const buildTower = (id: number) => {
     _towers.push(tower(id, 17 * TILE_SQ, 8 * TILE_SQ));
+    _towers.push(tower(id, 15 * TILE_SQ, 8 * TILE_SQ));
+    _towers.push(tower(id, 17 * TILE_SQ, 6 * TILE_SQ));
+    _towers.push(tower(id, 16 * TILE_SQ, 6 * TILE_SQ));
   };
 
   const animateFrame = () => {

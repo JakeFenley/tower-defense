@@ -18,6 +18,8 @@ export class Projectile {
   enemy: Enemy;
   img: HTMLImageElement;
   imgLoaded: boolean;
+  incX: number;
+  incY: number;
 
   constructor(tower: Tower, enemy: Enemy) {
     const { x: currX, y: currY } = tower.getCoords();
@@ -29,18 +31,20 @@ export class Projectile {
     this.imgLoaded = false;
     this.img = makeImg(IMAGES[tower.projectile], () => (this.imgLoaded = true));
     this.enemy = enemy;
+    this.tower = tower;
+    this.incX = (enemyX - currX) / 30;
+    this.incY = (enemyY - currY) / 30;
   }
 
   move = () => {
-    // const { x: enemyX, y: enemyY } = this.enemy.getCoords();
-    const { currX, currY, enemyX, enemyY } = this;
-    const stepX = enemyX - currX;
-    const stepY = enemyY - currY;
-    this.currX = currX + stepX * 0.05;
-    this.currY = currY + stepY * 0.05;
+    const {  enemyX, enemyY, incX, incY } = this;
+    this.currX = this.currX + incX;
+    this.currY = this.currY + incY;
 
     if (Math.abs(enemyX - this.currX) < 15 && Math.abs(enemyY - this.currY) < 15) {
+      this.enemy.damage(this.tower.damage)
       Projectiles.removeProjectile(this);
     }
   };
+
 }

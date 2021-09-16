@@ -20,7 +20,7 @@ const TOWERS: {
 } = {
   1: {
     name: 'Charizard',
-    damage: 15,
+    damage: 1,
     speed: 1,
     imgSrc: CHARIZARD,
     radius: 200,
@@ -34,17 +34,18 @@ export interface Tower {
   imgLoaded: () => boolean;
   attack: (enemies: Enemy[]) => void;
   projectile: string;
+  damage: number;
 }
 
 export default function tower(id: number, x: number, y: number): Tower {
   const projectile = <string>TOWERS[id].projectile;
-  let _damage = <number>TOWERS[id].damage;
-  let _speed = <number>TOWERS[id].speed;
-  let _radius = <number>TOWERS[id].radius;
+  const damage = <number>TOWERS[id].damage;
+  const _speed = <number>TOWERS[id].speed;
+  const _radius = <number>TOWERS[id].radius;
+  const _x = x;
+  const _y = y;
   let _imgLoaded = false;
   let _ticks = 0;
-  let _x = x;
-  let _y = y;
   let _focusedEnemy: Enemy | null = null;
 
   const _img = makeImg(<string>TOWERS[id].imgSrc, () => {
@@ -80,7 +81,6 @@ export default function tower(id: number, x: number, y: number): Tower {
 
   const _doAttackSideEffects = () => {
     if (_focusedEnemy) {
-      _focusedEnemy.damage(_damage);
       Projectiles.createProjectile(tower, _focusedEnemy);
       if (_focusedEnemy.getHealth() <= 0) {
         _focusedEnemy = null;
@@ -91,7 +91,7 @@ export default function tower(id: number, x: number, y: number): Tower {
   const attack = (enemies: Enemy[]) => {
     _ticks++;
 
-    if (_ticks! % 30) {
+    if (_ticks! % 15) {
       return;
     }
 
@@ -120,6 +120,7 @@ export default function tower(id: number, x: number, y: number): Tower {
     imgLoaded: () => _imgLoaded,
     attack,
     projectile,
+    damage,
   };
 
   return tower;

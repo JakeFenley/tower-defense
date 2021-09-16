@@ -4,7 +4,7 @@ import { TILE_SQ } from '../map/map-settings';
 import { Tile } from '../types';
 import store from '../canvas';
 
-const ENEMY_COUNT = 20;
+const ENEMY_COUNT = 70;
 const TIME_BETWEEN_SPAWN = 200;
 const ROUND_START_TIME = 0;
 
