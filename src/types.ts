@@ -71,7 +71,7 @@ export const ENEMIES: {
   [key: number]: IEnemyType;
 } = {
   1: {
-    health: 20,
+    health: 80,
     speed: 0.025,
     imgSrc: ASSETS.GOBLIN,
   },

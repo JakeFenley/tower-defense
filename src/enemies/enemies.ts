@@ -3,7 +3,7 @@ import enemy, { IEnemy } from './enemy';
 import { TILE_SQ } from '../map/map-settings';
 import store from '../canvas';
 
-const ENEMY_COUNT = 70;
+const ENEMY_COUNT = 5000;
 const TIME_BETWEEN_SPAWN = 500;
 const ROUND_START_TIME = 0;
 
@@ -23,10 +23,13 @@ class Enemies {
 
   reset = (level: number) => {
     Enemies.enemies = [];
-    for (let i = 0; i < ENEMY_COUNT; i++) {
-      Enemies.enemies.push(enemy(level));
-    }
     this._startTime = Date.now();
+
+    for (let i = 0; i < ENEMY_COUNT; i++) {
+      const newEnemy = enemy(level);
+      newEnemy.deployTime = ROUND_START_TIME + i * TIME_BETWEEN_SPAWN;
+      Enemies.enemies.push(newEnemy);
+    }
   };
 
   _drawHealthBar = (enemy: IEnemy, x: number, y: number) => {
@@ -43,19 +46,16 @@ class Enemies {
 
   animateFrame = () => {
     const elapsedTime = Math.floor(Date.now() - this._startTime);
-    if (elapsedTime < ROUND_START_TIME) {
-      return;
-    }
-    const enemiesToMove = (elapsedTime - ROUND_START_TIME) / TIME_BETWEEN_SPAWN;
-    for (let i = 0; i < enemiesToMove && i < Enemies.enemies.length; i++) {
-      const enemy = Enemies.enemies[i];
-      enemy.move();
-      if (enemy.imgLoaded() && enemy.getHealth() > 0) {
-        const { x, y } = enemy.getCoords();
-        this._ctx.drawImage(enemy.getImg(), x, y, TILE_SQ, TILE_SQ);
-        this._drawHealthBar(enemy, x, y);
+    Enemies.enemies.forEach((enemy) => {
+      if (enemy.deployTime < elapsedTime) {
+        enemy.move();
+        if (enemy.imgLoaded()) {
+          const { x, y } = enemy.getCoords();
+          this._ctx.drawImage(enemy.getImg(), x, y, TILE_SQ, TILE_SQ);
+          this._drawHealthBar(enemy, x, y);
+        }
       }
-    }
+    });
   };
 }
 

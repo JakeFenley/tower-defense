@@ -1,40 +1,31 @@
 import tower, { ITower } from './tower';
 
-import Enemies  from '../enemies/enemies';
+import Enemies from '../enemies/enemies';
 import { TILE_SQ } from '../map/map-settings';
 import store from '../canvas';
 
-interface Towers {
-  animateFrame: () => void;
-}
+export default class Towers {
+  private ctx: CanvasRenderingContext2D;
 
-function towers(): Towers {
-  const ctx = store.getCtx() as CanvasRenderingContext2D;
-  let _towers: ITower[] = [];
+  constructor() {
+    this.ctx = store.getCtx() as CanvasRenderingContext2D;
+  }
 
-  const buildTower = (id: number) => {
-    _towers.push(tower(id, 17 * TILE_SQ, 8 * TILE_SQ));
-    _towers.push(tower(id, 15 * TILE_SQ, 8 * TILE_SQ));
-    _towers.push(tower(id, 17 * TILE_SQ, 6 * TILE_SQ));
-    _towers.push(tower(id, 16 * TILE_SQ, 6 * TILE_SQ));
+  static towers: ITower[] = [];
+
+  static buildTower = (id: number, x: number, y: number) => {
+    Towers.towers.push(tower(id, x * TILE_SQ, y * TILE_SQ));
   };
 
-  const animateFrame = () => {
-    const enemies = Enemies.getEnemies()
-    _towers.forEach((tower) => {
-      tower.attack(enemies)
+  animateFrame = () => {
+    const enemies = Enemies.getEnemies();
+    Towers.towers.forEach((tower) => {
+      tower.attack(enemies);
       if (tower.imgLoaded()) {
         const { x, y } = tower.getCoords();
-        ctx.drawImage(tower.getImg(), x, y, TILE_SQ, TILE_SQ);
+        this.ctx.drawImage(tower.getImg(), x, y, TILE_SQ, TILE_SQ);
       }
     });
   };
-
-  buildTower(1);
-
-  return {
-    animateFrame: animateFrame,
-  };
 }
 
-export default towers;

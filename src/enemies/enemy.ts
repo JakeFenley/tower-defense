@@ -1,6 +1,7 @@
 import { ROAD_PATH_COORDS } from '../map/map-settings';
 import { ASSETS, DIRECTIONS, ENEMIES, Tile } from '../types';
 import { convertToTrueCoords, makeImg } from '../util';
+import Enemies from './enemies';
 export interface IEnemy {
   damage: (dmg: number) => void;
   move: () => void;
@@ -9,6 +10,7 @@ export interface IEnemy {
   getHealth: () => number;
   imgLoaded: () => boolean;
   getHealthPercentage: () => number;
+  deployTime: number;
 }
 
 export default function enemy(level: number): IEnemy {
@@ -98,9 +100,13 @@ export default function enemy(level: number): IEnemy {
 
   const damage = (dmg: number) => {
     _health = _health - dmg;
+
+    if (_health <= 0) {
+      Enemies.killEnemy(enemy);
+    }
   };
 
-  return {
+  const enemy = {
     damage,
     move,
     getImg: () => _img,
@@ -108,5 +114,8 @@ export default function enemy(level: number): IEnemy {
     getHealth: () => _health,
     imgLoaded: () => _imgLoaded,
     getHealthPercentage: () => _health / maxHealth,
+    deployTime: 12345678,
   };
+
+  return enemy;
 }
