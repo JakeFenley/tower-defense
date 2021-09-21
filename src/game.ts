@@ -14,7 +14,9 @@ function game() {
   const towers = new Towers();
   const projectiles = new Projectiles();
   const controls = new Controls();
-  enemies.reset(1); // todo: implement game system
+  enemies.spawn(1); // todo: implement game system
+  setTimeout(() => enemies.spawn(2), 10000)
+  setTimeout(() => enemies.spawn(3), 20000)
 
   const render = () => {
     if (_running) {

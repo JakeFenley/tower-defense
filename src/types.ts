@@ -36,12 +36,18 @@ export const ASSETS = ((): IGameType => {
   const BIRD = `${PATH}/bird.png`;
   const CHARIZARD = `${PATH}/charizard.png`;
   const FIREBALL = `${PATH}/fireball.png`;
+  const GRASS_TILE = `${PATH}/grass_tile.png`;
+  const DESERT_TILE = `${PATH}/desert_tile.png`;
+  const TREE = `${PATH}/tree.png`;
 
   return {
     GOBLIN,
     BIRD,
     CHARIZARD,
     FIREBALL,
+    GRASS_TILE,
+    DESERT_TILE,
+    TREE,
   };
 })();
 

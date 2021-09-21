@@ -1,3 +1,4 @@
+import { ASSETS, Tile } from '../types';
 import { ROAD_PATH_COORDS, TILE_SQ, TREE_COORDS } from './map-settings';
 
 import { makeImg } from '../util';
@@ -17,7 +18,7 @@ function buildGrass(width: number, height: number) {
       grass.push({
         x: x,
         y: y,
-        imgSrc: '/assets/grass_tile.png',
+        imgSrc: ASSETS.GRASS_TILE,
       });
     }
   }
@@ -25,24 +26,14 @@ function buildGrass(width: number, height: number) {
   return grass;
 }
 
-function buildRoad() {
-  const road: grid[] = ROAD_PATH_COORDS.map((tile) => {
+function buildTilesFromArray(tileArr: Tile[], assetPath: string) {
+  const grid: grid[] = tileArr.map((tile) => {
     return {
       ...tile,
-      imgSrc: '/assets/desert_tile.png',
+      imgSrc: assetPath,
     };
   });
-  return road;
-}
-
-function buildTrees() {
-  const road: grid[] = TREE_COORDS.map((tile) => {
-    return {
-      ...tile,
-      imgSrc: '/assets/chestnut_tree.png',
-    };
-  });
-  return road;
+  return grid;
 }
 
 function map() {
@@ -50,38 +41,31 @@ function map() {
   const ctx = store.getCtx() as CanvasRenderingContext2D;
   const { width, height } = canvas;
   const _base: grid[] = buildGrass(width, height);
-  const _road: grid[] = buildRoad();
-  const _trees: grid[] = buildTrees();
+  const _road: grid[] = buildTilesFromArray(ROAD_PATH_COORDS, ASSETS.DESERT_TILE);
+  const _trees: grid[] = buildTilesFromArray(TREE_COORDS, ASSETS.TREE);
 
   const _map: grid[] = [..._base, ..._road, ..._trees];
-  const _imgs: { [key: string]: { img: HTMLImageElement; loaded: boolean; x: number; y: number } } = {};
+  const _imgs: { img: HTMLImageElement; loaded: boolean; x: number; y: number }[] = [];
 
   const draw = () => {
-    Object.keys(_imgs).forEach((key) => {
-      const img = _imgs[key];
+    _imgs.forEach((img) => {
       if (img.loaded) {
         ctx.drawImage(img.img, img.x * TILE_SQ, img.y * TILE_SQ, TILE_SQ, TILE_SQ);
       }
     });
   };
 
-  const _makeHash = (x: number, y: number, src: string) => {
-    const imgPathSplit = src.split('/');
-    return 'x_' + x + '_y_' + y + '_img_' + imgPathSplit[imgPathSplit.length - 1];
-  };
-
   const _makeImgs = () => {
     _map.forEach((tile) => {
-      const hash = _makeHash(tile.x, tile.y, tile.imgSrc);
-      const img = makeImg(tile.imgSrc, () => {
-        _imgs[hash].loaded = true;
-      });
-      _imgs[hash] = {
-        img: img,
+      const imageObj = {
         loaded: false,
         x: tile.x,
         y: tile.y,
+        img: makeImg(tile.imgSrc, () => {
+          imageObj.loaded = true;
+        }),
       };
+      _imgs.push(imageObj);
     });
   };
 

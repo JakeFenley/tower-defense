@@ -1,10 +1,10 @@
-import { ROAD_PATH_COORDS } from '../map/map-settings';
+import { ROAD_PATH_COORDS, TILE_SQ } from '../map/map-settings';
 import { ASSETS, DIRECTIONS, ENEMIES, Tile } from '../types';
 import { convertToTrueCoords, makeImg } from '../util';
 import Enemies from './enemies';
 export interface IEnemy {
   damage: (dmg: number) => void;
-  move: () => void;
+  animateFrame: (ctx:CanvasRenderingContext2D) => void;
   getImg: () => HTMLImageElement;
   getCoords: () => { x: number; y: number };
   getHealth: () => number;
@@ -81,7 +81,17 @@ export default function enemy(level: number): IEnemy {
     _y = _y + stepY * _speed;
   };
 
-  const move = () => {
+
+  const damage = (dmg: number) => {
+    _health = _health - dmg;
+
+    if (_health <= 0) {
+      Enemies.killEnemy(enemy);
+    }
+  };
+
+
+  const _move = () => {
     if (!_moved) {
       _setInitialMovement();
     }
@@ -98,23 +108,34 @@ export default function enemy(level: number): IEnemy {
     _setCoords();
   };
 
-  const damage = (dmg: number) => {
-    _health = _health - dmg;
+  const _draw = (ctx: CanvasRenderingContext2D) => {
+    ctx.drawImage(_img, _x, _y, TILE_SQ, TILE_SQ);
 
-    if (_health <= 0) {
-      Enemies.killEnemy(enemy);
+    const healthPercentange = _health / maxHealth;
+    if (healthPercentange > 0.85) {
+      ctx.fillStyle = 'green';
+    } else if (healthPercentange > 0.5) {
+      ctx.fillStyle = 'orange';
+    } else {
+      ctx.fillStyle = 'red';
     }
+    ctx.fillRect(_x + 3, _y - 8, TILE_SQ * healthPercentange - 6, 6);
   };
+
+
 
   const enemy = {
     damage,
-    move,
+    animateFrame: (ctx:CanvasRenderingContext2D) => {
+      _move()
+      _draw(ctx)
+    },
     getImg: () => _img,
     getCoords: () => ({ x: _x, y: _y }),
     getHealth: () => _health,
     imgLoaded: () => _imgLoaded,
     getHealthPercentage: () => _health / maxHealth,
-    deployTime: 12345678,
+    deployTime: 0,
   };
 
   return enemy;
