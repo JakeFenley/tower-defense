@@ -1,7 +1,7 @@
-import Controls from './controls';
 import Enemies from './enemies/enemies';
 import Projectiles from './towers/projectiles';
 import Towers from './towers/towers';
+import Ui from './ui';
 import map from './map/map';
 import store from './canvas';
 
@@ -13,7 +13,7 @@ function game() {
   const enemies = new Enemies();
   const towers = new Towers();
   const projectiles = new Projectiles();
-  const controls = new Controls();
+  const ui = new Ui();
   enemies.spawn(1); // todo: implement game system
   setTimeout(() => enemies.spawn(2), 10000)
   setTimeout(() => enemies.spawn(3), 20000)
@@ -25,7 +25,7 @@ function game() {
       enemies.animateFrame();
       towers.animateFrame();
       projectiles.animateFrame();
-      controls.animateFrame();
+      ui.animateFrame();
       requestAnimationFrame(render);
     }
   };

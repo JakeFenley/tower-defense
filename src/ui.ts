@@ -6,16 +6,16 @@ import store from './canvas';
 
 class Mouse {
   private canvas: HTMLCanvasElement;
-  private controls: Controls;
+  private ui: Ui;
   private ctx: CanvasRenderingContext2D;
 
-  constructor(controls: Controls) {
+  constructor(ui: Ui) {
     this.canvas = store.getCanvas();
     this.ctx = store.getCtx() as CanvasRenderingContext2D;
     this.canvas.addEventListener('mousemove', this.handleMouseMove);
     this.canvas.addEventListener('mouseout', this.nullifyMouseMoveAnimation);
     this.canvas.addEventListener('click', this.handleClick);
-    this.controls = controls;
+    this.ui = ui;
   }
 
   private isRoadPath = (x: number, y: number) => {
@@ -39,14 +39,14 @@ class Mouse {
   };
 
   private handleMouseMove = throttle((e: MouseEvent) => {
-    const { controls, ctx } = this;
+    const { ui, ctx } = this;
     const { x, y } = this.getMouseCoords(e);
 
     if (this.isRoadPath(x, y)) {
       return this.nullifyMouseMoveAnimation();
     }
 
-    controls.mutateAnimation('mouseMove', () => {
+    ui.mutateAnimation('mouseMove', () => {
       ctx.lineWidth = 3;
       ctx.strokeStyle = 'red';
       ctx.strokeRect(x * TILE_SQ, y * TILE_SQ, TILE_SQ, TILE_SQ);
@@ -55,11 +55,11 @@ class Mouse {
   }, 25);
 
   private nullifyMouseMoveAnimation = () => {
-    this.controls.mutateAnimation('mouseMove', null);
+    this.ui.mutateAnimation('mouseMove', null);
   };
 }
 
-export default class Controls {
+export default class Ui {
   private mouse: Mouse;
   private animations: { [key: string]: (() => void) | null };
   private ctx: CanvasRenderingContext2D;
